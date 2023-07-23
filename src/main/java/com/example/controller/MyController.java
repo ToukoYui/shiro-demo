@@ -6,7 +6,7 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+
 
 @Controller
 public class MyController {
@@ -17,6 +17,7 @@ public class MyController {
         return "index";
     }
 
+    // 1.硬编码式
     @RequestMapping("/user/add")
     public String add() {
         System.out.println("进入add");
@@ -26,16 +27,19 @@ public class MyController {
         return isPermitted? "add":"noauth";
     }
 
+    // 2 注解式
     @RequiresPermissions("user:update")
     @RequestMapping("/user/update")
     public String update() {
-        System.out.println("进入update");
-//        Subject subject = SecurityUtils.getSubject();
-//        boolean isPermitted = subject.isPermitted("user:update");
-//        System.out.println("isPermitted = " + isPermitted);
-//        return isPermitted? "update":"noauth";
+        // 这样是不能catch到异常的，需要@ExceptionHandler
+//        try{
+//            System.out.println("进入update");
+//        }catch (UnauthorizedException e){
+//            return "noauth";
+//        }
         return "update";
     }
+
 
     @RequestMapping("/noauth")
     public String unauthorized(){
